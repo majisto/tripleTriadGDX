@@ -1,0 +1,272 @@
+highres-0.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 0
+
+highres-1.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 1
+
+highres-2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+board
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 0
+
+highres-3.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+board
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 1
+
+highres-4.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 0
+
+highres-5.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 1
+
+highres-6.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 2
+
+highres-7.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 3
+
+highres-8.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 4
+
+highres-9.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 5
+
+highres-10.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 6
+
+highres-11.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 7
+
+highres-12.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards_7_en
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: -1
+
+highres-13.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 8
+
+highres-14.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 9
+
+highres-15.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 10
+
+highres-16.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 11
+
+highres-17.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 12
+
+highres-18.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cards
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 13
+
+highres-19.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+text
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: 0
+
+highres-20.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+text
+  rotate: false
+  xy: 0, 0
+  size: 1024, 1024
+  orig: 1024, 1024
+  offset: 0, 0
+  index: 2

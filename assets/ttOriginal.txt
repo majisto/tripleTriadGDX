@@ -1,0 +1,215 @@
+ttOriginal.png
+size: 1296, 1110
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+angelo
+  rotate: false
+  xy: 0, 0
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+blank.tex
+  rotate: false
+  xy: 216, 0
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+bomb
+  rotate: false
+  xy: 432, 0
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+bombCPU
+  rotate: false
+  xy: 648, 0
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+cactuar
+  rotate: false
+  xy: 864, 0
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+cactuarCPU
+  rotate: false
+  xy: 1080, 0
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+chicobo
+  rotate: false
+  xy: 0, 222
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+chicoboCPU
+  rotate: false
+  xy: 216, 222
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+funguar
+  rotate: false
+  xy: 432, 222
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+funguarCPU
+  rotate: false
+  xy: 648, 222
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+ifrit
+  rotate: false
+  xy: 864, 222
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+ifritCPU
+  rotate: false
+  xy: 1080, 222
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+laguna
+  rotate: false
+  xy: 0, 444
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+lagunaCPU
+  rotate: false
+  xy: 216, 444
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+minimog
+  rotate: false
+  xy: 432, 444
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+minimogCPU
+  rotate: false
+  xy: 648, 444
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+quistus
+  rotate: false
+  xy: 864, 444
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+quistusCPU
+  rotate: false
+  xy: 1080, 444
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+rinoa
+  rotate: false
+  xy: 0, 666
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+rinoaCPU
+  rotate: false
+  xy: 216, 666
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+seifer
+  rotate: false
+  xy: 432, 666
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+seiferCPU
+  rotate: false
+  xy: 648, 666
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+selphie
+  rotate: false
+  xy: 864, 666
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+selphieCPU
+  rotate: false
+  xy: 1080, 666
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+shiva
+  rotate: false
+  xy: 0, 888
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+shivaCPU
+  rotate: false
+  xy: 216, 888
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+squall
+  rotate: false
+  xy: 432, 888
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+squallCPU
+  rotate: false
+  xy: 648, 888
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+zell
+  rotate: false
+  xy: 864, 888
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
+zellCPU
+  rotate: false
+  xy: 1080, 888
+  size: 216, 222
+  orig: 216, 222
+  offset: 0, 0
+  index: -1
