@@ -11,11 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class TTAssetManager {
     public final AssetManager manager = new AssetManager();
     public final String playingSong = "shuffleOrBoogie.mp3";
+    public final String victoryMusic = "victoryMusic.mp3";
     public final String skin = "skins/star-soldier/skin/star-soldier-ui.json";
     public final String skin2 = "skins/clean-crispy/skin/clean-crispy-ui.json";
 
     public void queueAddMusic() {
         manager.load(playingSong, Music.class);
+        manager.load(victoryMusic, Music.class);
     }
     public void queueAddSkins(){
         SkinLoader.SkinParameter params = new SkinLoader.SkinParameter("skins/star-soldier/skin/star-soldier-ui.atlas");

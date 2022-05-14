@@ -30,6 +30,7 @@ import java.util.*;
 public class GameScreen implements Screen {
     private final TripleTriad game;
     private final Music boogie;
+    private final Music victoryMusic;
     private final Stage stage;
 
     private Hand playerHand = new Hand();
@@ -51,6 +52,10 @@ public class GameScreen implements Screen {
     private String computerScore = "5";
     private Label playerScoreLabel;
     private Label computerScoreLabel;
+    private Label infoLabel;
+    private VerticalGroup cpuVerticalGroup;
+    private VerticalGroup humanVerticalGroup;
+    private Label endOfGameMessage;
 
     public GameScreen(TripleTriad game) {
 
@@ -67,6 +72,7 @@ public class GameScreen implements Screen {
         board = new Board();
         stage = new Stage(new ScreenViewport());
         boogie = game.assMan.manager.get("shuffleOrBoogie.mp3");
+        victoryMusic = game.assMan.manager.get("victoryMusic.mp3");
         boogie.setLooping(true);
         boogie.play();
     }
@@ -90,16 +96,37 @@ public class GameScreen implements Screen {
     }
 
     private void buidScoreLabels() {
+        humanVerticalGroup = new VerticalGroup();
+        Label humanLabel = new Label("HUMAN", skin);
+        humanLabel.setColor(Color.BLUE);
+        humanLabel.setFontScale(2f);
         playerScoreLabel = new Label(playerScore, skin);
         playerScoreLabel.setFontScale(7f, 7f);
         playerScoreLabel.setColor(Color.BLUE);
-        playerScoreLabel.setPosition(stage.getViewport().getScreenWidth() * 0.7f, stage.getHeight() * 0.08f);
-        stage.addActor(playerScoreLabel);
+        humanVerticalGroup.setPosition(stage.getViewport().getScreenWidth() * 0.7f, stage.getHeight() * 0.2f);
+        humanVerticalGroup.addActor(humanLabel);
+        humanVerticalGroup.addActor(playerScoreLabel);
+        stage.addActor(humanVerticalGroup);
+//        stage.addActor(playerScoreLabel);
+
+
+        cpuVerticalGroup = new VerticalGroup();
+        Label computerLabel = new Label("CPU", skin);
+        computerLabel.setColor(Color.RED);
+        computerLabel.setFontScale(2f);
         computerScoreLabel = new Label(computerScore, skin);
         computerScoreLabel.setFontScale(7f, 7f);
         computerScoreLabel.setColor(Color.RED);
-        computerScoreLabel.setPosition(stage.getViewport().getScreenWidth() * 0.2f, stage.getHeight() * 0.08f);
-        stage.addActor(computerScoreLabel);
+        cpuVerticalGroup.setPosition(stage.getViewport().getScreenWidth() * 0.25f, stage.getHeight() * 0.2f);
+        cpuVerticalGroup.addActor(computerLabel);
+        cpuVerticalGroup.addActor(computerScoreLabel);
+        stage.addActor(cpuVerticalGroup);
+//        stage.addActor(computerScoreLabel);
+
+        infoLabel = new Label("", skin);
+        infoLabel.setFontScale(1.5f);
+        infoLabel.setPosition(stage.getWidth() * 0.32f, stage.getHeight() * 0.1f);
+        stage.addActor(infoLabel);
     }
 
     private void buildPlayerHandButtons() {
@@ -140,6 +167,7 @@ public class GameScreen implements Screen {
                     selectedButton = (Button) actor;
                     selectedCheckbox = checkBox;
                     selectedCard = playerHand.nameCard.get(actor.getName());
+                    infoLabel.setText("Selected: " + selectedCard.getName());
                 }
             });
             table.add(textButton);
@@ -296,6 +324,7 @@ public class GameScreen implements Screen {
             buttonImage.addListener(new ClickListener(){
                 @Override
                 public void clicked (InputEvent event, float x, float y) {
+                    infoLabel.setText("");
                     TTButton imageButton = (TTButton) event.getListenerActor();
                     if (selectedCard == null || imageButton.getCard() != null) return;
                     imageButton.setCard(selectedCard);
@@ -303,13 +332,17 @@ public class GameScreen implements Screen {
                     selectedButton.remove();
                     selectedCheckbox.remove();
                     clearCheckboxes();
-                    captureOpponents(imageButton.getPosition(), selectedCard, Players.HUMAN);
-                    process_ai(imageButton);
-                    selectedCard = null;
-//                    sprite.setColor(Color.FIREBRICK);
                     SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
                     imageButton.getStyle().imageUp = new SpriteDrawable(spriteDrawable);
                     imageButton.getStyle().imageDown = new SpriteDrawable(spriteDrawable);
+                    captureOpponents(imageButton.getPosition(), selectedCard, Players.HUMAN);
+                    if (computerHand.getCards().size() <= 1 || playerHand.getCards().size() <= 1) {
+                        //End of game.
+                        determineVictory();
+                        return;
+                    }
+                    process_ai(imageButton);
+                    selectedCard = null;
                 }
             });
             table.add(buttonImage);
@@ -320,6 +353,31 @@ public class GameScreen implements Screen {
         boardTable = table;
         buildNeighborMap();
         stage.addActor(table);
+    }
+
+    private void determineVictory () {
+        int humanScore = Integer.parseInt(playerScore);
+        int cpuScore = Integer.parseInt(computerScore);
+        boogie.stop();
+        victoryMusic.play();
+        if (humanScore < cpuScore){
+            endOfGameMessage = new Label("YOU LOSE!", skin);
+            endOfGameMessage.setColor(Color.RED);
+            endOfGameMessage.setFontScale(10f);
+            endOfGameMessage.setPosition(0, stage.getHeight() * 0.5f);
+        } else if (cpuScore < humanScore) {
+            endOfGameMessage = new Label("YOU WIN!", skin);
+            endOfGameMessage.setColor(Color.BLUE);
+            endOfGameMessage.setFontScale(10f);
+            endOfGameMessage.setPosition(0, stage.getHeight() * 0.5f);
+        } else {
+            //Draw
+            endOfGameMessage = new Label("DRAW!", skin);
+            endOfGameMessage.setColor(Color.RED);
+            endOfGameMessage.setFontScale(10f);
+            endOfGameMessage.setPosition(stage.getWidth() * 0.25f, stage.getHeight() * 0.5f);
+        }
+        stage.addActor(endOfGameMessage);
     }
 
     private void process_ai (TTButton button) {
@@ -418,8 +476,9 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        playerScoreLabel.setPosition(stage.getViewport().getScreenWidth() * 0.7f, stage.getHeight() * 0.08f);
-        computerScoreLabel.setPosition(stage.getViewport().getScreenWidth() * 0.2f, stage.getHeight() * 0.08f);
+        humanVerticalGroup.setPosition(stage.getViewport().getScreenWidth() * 0.7f, stage.getHeight() * 0.2f);
+        cpuVerticalGroup.setPosition(stage.getViewport().getScreenWidth() * 0.25f, stage.getHeight() * 0.2f);
+        infoLabel.setPosition(stage.getViewport().getScreenWidth() * 0.32f, stage.getViewport().getScreenHeight() * .1f);
     }
 
     @Override
@@ -441,5 +500,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         boogie.dispose();
         stage.dispose();
+        victoryMusic.dispose();
+        skin.dispose();
     }
 }
