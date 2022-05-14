@@ -358,8 +358,6 @@ public class GameScreen implements Screen {
     private void determineVictory () {
         int humanScore = Integer.parseInt(playerScore);
         int cpuScore = Integer.parseInt(computerScore);
-        boogie.stop();
-        victoryMusic.play();
         if (humanScore < cpuScore){
             endOfGameMessage = new Label("YOU LOSE!", skin);
             endOfGameMessage.setColor(Color.RED);
@@ -370,6 +368,8 @@ public class GameScreen implements Screen {
             endOfGameMessage.setColor(Color.BLUE);
             endOfGameMessage.setFontScale(10f);
             endOfGameMessage.setPosition(0, stage.getHeight() * 0.5f);
+            boogie.stop();
+            victoryMusic.play();
         } else {
             //Draw
             endOfGameMessage = new Label("DRAW!", skin);
