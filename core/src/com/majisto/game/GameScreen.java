@@ -36,26 +36,27 @@ public class GameScreen implements Screen {
     private Hand playerHand = new Hand();
     private Hand computerHand = new Hand();
     Board board;
-    private Skin skin;
-    private Skin crispySkin;
+    private final Skin skin;
+    private final Skin crispySkin;
     final HashMap<String, Sprite> sprites = new HashMap<>();
     TextureAtlas originalAtlas;
-    Card selectedCard = new Card();
+    Card selectedCard;
     Button selectedButton;
     CheckBox selectedCheckbox;
-    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxes;
     private Table boardTable;
     private Table computerHandTable;
-    Map<Position, List<TTButton>> neighborMap = new LinkedHashMap<>(); //Actors adjacent to index.
-    Map<Position, TTButton> positionActorMap = new HashMap<>();
-    private String playerScore = "5";
-    private String computerScore = "5";
+    Map<Position, List<TTButton>> neighborMap; //Actors adjacent to index.
+    Map<Position, TTButton> positionActorMap;
+    private Integer playerScore = 5;
+    private Integer computerScore = 5;
     private Label playerScoreLabel;
     private Label computerScoreLabel;
     private Label infoLabel;
     private VerticalGroup cpuVerticalGroup;
     private VerticalGroup humanVerticalGroup;
     private Label endOfGameMessage;
+    private TextButton newGameButton;
 
     public GameScreen(TripleTriad game) {
 
@@ -69,20 +70,24 @@ public class GameScreen implements Screen {
         }
 
         this.game = game;
-        board = new Board();
         stage = new Stage(new ScreenViewport());
         boogie = game.assMan.manager.get("shuffleOrBoogie.mp3");
         victoryMusic = game.assMan.manager.get("victoryMusic.mp3");
+        skin = game.assMan.manager.get("skins/star-soldier/skin/star-soldier-ui.json");
+        crispySkin = game.assMan.manager.get("skins/clean-crispy/skin/clean-crispy-ui.json");
         boogie.setLooping(true);
-        boogie.play();
     }
 
     @Override
     public void show() {
         stage.clear();
-
-        skin = game.assMan.manager.get("skins/star-soldier/skin/star-soldier-ui.json");
-        crispySkin = game.assMan.manager.get("skins/clean-crispy/skin/clean-crispy-ui.json");
+        boogie.play();
+        board = new Board();
+        positionActorMap = new HashMap<>();
+        neighborMap = new LinkedHashMap<>();
+        checkBoxes = new ArrayList<>();
+        playerHand = new Hand();
+        computerHand = new Hand();
 
         buildUIButtonsAndBoard();
         Gdx.input.setInputProcessor(stage);
@@ -92,15 +97,15 @@ public class GameScreen implements Screen {
         buildBoard();
         buildPlayerHandButtons();
         buildComputerHandImages();
-        buidScoreLabels();
+        buildScoreLabels();
     }
 
-    private void buidScoreLabels() {
+    private void buildScoreLabels() {
         humanVerticalGroup = new VerticalGroup();
         Label humanLabel = new Label("HUMAN", skin);
         humanLabel.setColor(Color.BLUE);
         humanLabel.setFontScale(2f);
-        playerScoreLabel = new Label(playerScore, skin);
+        playerScoreLabel = new Label(String.valueOf(playerScore), skin);
         playerScoreLabel.setFontScale(7f, 7f);
         playerScoreLabel.setColor(Color.BLUE);
         humanVerticalGroup.setPosition(stage.getViewport().getScreenWidth() * 0.7f, stage.getHeight() * 0.2f);
@@ -114,7 +119,7 @@ public class GameScreen implements Screen {
         Label computerLabel = new Label("CPU", skin);
         computerLabel.setColor(Color.RED);
         computerLabel.setFontScale(2f);
-        computerScoreLabel = new Label(computerScore, skin);
+        computerScoreLabel = new Label(String.valueOf(computerScore), skin);
         computerScoreLabel.setFontScale(7f, 7f);
         computerScoreLabel.setColor(Color.RED);
         cpuVerticalGroup.setPosition(stage.getViewport().getScreenWidth() * 0.25f, stage.getHeight() * 0.2f);
@@ -127,6 +132,28 @@ public class GameScreen implements Screen {
         infoLabel.setFontScale(1.5f);
         infoLabel.setPosition(stage.getWidth() * 0.32f, stage.getHeight() * 0.1f);
         stage.addActor(infoLabel);
+
+        newGameButton = new TextButton("New Game?", skin);
+        newGameButton.setPosition(stage.getWidth() * 0.2f, stage.getHeight() * 0.8f);
+        newGameButton.setVisible(false);
+        newGameButton.setTransform(true);
+        newGameButton.setScale(4f);
+        newGameButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                startNewGame();
+            }
+        });
+        stage.addActor(newGameButton);
+    }
+
+    private void startNewGame () {
+        newGameButton.setVisible(false);
+        endOfGameMessage.setVisible(false);
+        computerScore = 5;
+        playerScore = 5;
+        updateScores();
+        show();
     }
 
     private void buildPlayerHandButtons() {
@@ -182,20 +209,17 @@ public class GameScreen implements Screen {
         List<TTButton> actors = neighborMap.get(position);
         Entry attackerEntry = Entry.builder().card(card).position(position).build();
         for (TTButton defenderButton : actors) {
-            if (defenderButton.getCard() == null) continue;;
+            if (defenderButton.getCard() == null || defenderButton.getOwner().equals(player)) {
+                continue;
+            }
             Entry defenderEntry = Entry.builder().card(defenderButton.getCard()).position(defenderButton.getPosition()).build();
             boolean b = calculateCapture(attackerEntry, defenderEntry);
             if (b) {
                 //Capture card.
                 if (player == Players.HUMAN) {
-                    int score = Integer.parseInt(playerScore);
-                    score += 1;
-                    playerScore = String.valueOf(score);
-                    playerScoreLabel.setText(playerScore);
-                    int aiscore = Integer.parseInt(computerScore);
-                    aiscore -= 1;
-                    computerScore = String.valueOf(aiscore);
-                    computerScoreLabel.setText(computerScore);
+                    playerScore++;
+                    computerScore--;
+                    updateScores();
                     defenderButton.setOwner(Players.HUMAN);
                     Sprite sprite = sprites.get(defenderButton.getCard().getName());
                     SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
@@ -203,14 +227,9 @@ public class GameScreen implements Screen {
                     defenderButton.getStyle().imageDown = new SpriteDrawable(spriteDrawable);
                 }
                 else if (player == Players.COMPUTER) {
-                    int score = Integer.parseInt(playerScore);
-                    score -= 1;
-                    playerScore = String.valueOf(score);
-                    playerScoreLabel.setText(playerScore);
-                    int aiscore = Integer.parseInt(computerScore);
-                    aiscore += 1;
-                    computerScore = String.valueOf(aiscore);
-                    computerScoreLabel.setText(computerScore);
+                    playerScore--;
+                    computerScore++;
+                    updateScores();
                     defenderButton.setOwner(Players.COMPUTER);
                     Sprite sprite = sprites.get(defenderButton.getCard().getName()+"CPU");
                     SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
@@ -223,6 +242,11 @@ public class GameScreen implements Screen {
             }
         }
 
+    }
+
+    private void updateScores () {
+        playerScoreLabel.setText(String.valueOf(playerScore));
+        computerScoreLabel.setText(String.valueOf(computerScore));
     }
 
     private boolean calculateCapture(Entry attacker, Entry defender) {
@@ -327,6 +351,7 @@ public class GameScreen implements Screen {
                     infoLabel.setText("");
                     TTButton imageButton = (TTButton) event.getListenerActor();
                     if (selectedCard == null || imageButton.getCard() != null) return;
+                    imageButton.setOwner(Players.HUMAN);
                     imageButton.setCard(selectedCard);
                     Sprite sprite = sprites.get(selectedCard.getName());
                     selectedButton.remove();
@@ -341,7 +366,12 @@ public class GameScreen implements Screen {
                         determineVictory();
                         return;
                     }
-                    process_ai(imageButton);
+                    com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task(){
+                        @Override
+                        public void run() {
+                            process_ai(imageButton);
+                        }
+                    }, 1.5f);
                     selectedCard = null;
                 }
             });
@@ -356,8 +386,8 @@ public class GameScreen implements Screen {
     }
 
     private void determineVictory () {
-        int humanScore = Integer.parseInt(playerScore);
-        int cpuScore = Integer.parseInt(computerScore);
+        int humanScore = playerScore;
+        int cpuScore = computerScore;
         if (humanScore < cpuScore){
             endOfGameMessage = new Label("YOU LOSE!", skin);
             endOfGameMessage.setColor(Color.RED);
@@ -378,6 +408,7 @@ public class GameScreen implements Screen {
             endOfGameMessage.setPosition(stage.getWidth() * 0.25f, stage.getHeight() * 0.5f);
         }
         stage.addActor(endOfGameMessage);
+        newGameButton.setVisible(true);
     }
 
     private void process_ai (TTButton button) {
@@ -411,6 +442,7 @@ public class GameScreen implements Screen {
         Sprite sprite = sprites.get(strongestPlay.getName()+"CPU");
         aiButton.getStyle().imageDown = new SpriteDrawable(sprite);
         aiButton.getStyle().imageUp = new SpriteDrawable(sprite);
+        aiButton.setOwner(Players.COMPUTER);
         computerHandTable.removeActor(computerHandTable.findActor(strongestPlay.getName()));
         computerHand.getCards().remove(strongestPlay.getId());
         captureOpponents(positionToPlay, strongestPlay, Players.COMPUTER);
