@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -35,7 +37,6 @@ public class GameScreen implements Screen {
 
     private Hand playerHand = new Hand();
     private Hand computerHand = new Hand();
-    Board board;
     private final Skin skin;
     private final Skin crispySkin;
     final HashMap<String, Sprite> sprites = new HashMap<>();
@@ -82,7 +83,6 @@ public class GameScreen implements Screen {
     public void show() {
         stage.clear();
         boogie.play();
-        board = new Board();
         positionActorMap = new HashMap<>();
         neighborMap = new LinkedHashMap<>();
         checkBoxes = new ArrayList<>();
@@ -112,7 +112,6 @@ public class GameScreen implements Screen {
         humanVerticalGroup.addActor(humanLabel);
         humanVerticalGroup.addActor(playerScoreLabel);
         stage.addActor(humanVerticalGroup);
-//        stage.addActor(playerScoreLabel);
 
 
         cpuVerticalGroup = new VerticalGroup();
@@ -126,7 +125,6 @@ public class GameScreen implements Screen {
         cpuVerticalGroup.addActor(computerLabel);
         cpuVerticalGroup.addActor(computerScoreLabel);
         stage.addActor(cpuVerticalGroup);
-//        stage.addActor(computerScoreLabel);
 
         infoLabel = new Label("", skin);
         infoLabel.setFontScale(1.5f);
@@ -153,6 +151,7 @@ public class GameScreen implements Screen {
         computerScore = 5;
         playerScore = 5;
         updateScores();
+        if (victoryMusic.isPlaying()) victoryMusic.stop();
         show();
     }
 
@@ -348,31 +347,36 @@ public class GameScreen implements Screen {
             buttonImage.addListener(new ClickListener(){
                 @Override
                 public void clicked (InputEvent event, float x, float y) {
-                    infoLabel.setText("");
                     TTButton imageButton = (TTButton) event.getListenerActor();
                     if (selectedCard == null || imageButton.getCard() != null) return;
-                    imageButton.setOwner(Players.HUMAN);
-                    imageButton.setCard(selectedCard);
-                    Sprite sprite = sprites.get(selectedCard.getName());
-                    selectedButton.remove();
-                    selectedCheckbox.remove();
-                    clearCheckboxes();
-                    SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
-                    imageButton.getStyle().imageUp = new SpriteDrawable(spriteDrawable);
-                    imageButton.getStyle().imageDown = new SpriteDrawable(spriteDrawable);
-                    captureOpponents(imageButton.getPosition(), selectedCard, Players.HUMAN);
-                    if (computerHand.getCards().size() <= 1 || playerHand.getCards().size() <= 1) {
-                        //End of game.
-                        determineVictory();
-                        return;
-                    }
+                    infoLabel.setText("");
+                    Action action = Actions.sequence(Actions.moveTo(imageButton.getX(), imageButton.getY(), 0.3f),
+                            Actions.run(() -> {
+                                playerHand.getCards().remove(selectedCard.getId());
+                                selectedButton.remove();
+                                imageButton.setOwner(Players.HUMAN);
+                                imageButton.setCard(selectedCard);
+                                selectedCheckbox.remove();
+                                clearCheckboxes();
+                                Sprite sprite = sprites.get(selectedCard.getName());
+                                SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
+                                imageButton.getStyle().imageUp = new SpriteDrawable(spriteDrawable);
+                                imageButton.getStyle().imageDown = new SpriteDrawable(spriteDrawable);
+                                captureOpponents(imageButton.getPosition(), selectedCard, Players.HUMAN);
+                                if (computerHand.getCards().size() <= 1) {
+                                    //End of game.
+                                    determineVictory();
+                                    return;
+                                }
+                                selectedCard = null;
+                            }));
+                    selectedButton.addAction(action);
                     com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task(){
                         @Override
                         public void run() {
                             process_ai(imageButton);
                         }
                     }, 1.5f);
-                    selectedCard = null;
                 }
             });
             table.add(buttonImage);
@@ -412,6 +416,9 @@ public class GameScreen implements Screen {
     }
 
     private void process_ai (TTButton button) {
+        if (newGameButton.isVisible() || playerHand.getCards().size() == 5) {
+            return;
+        }
         Entry entry = Entry.builder().card(button.getCard()).position(button.getPosition()).owner(Players.COMPUTER).build();
         List<AiEntry> aiEntries = new ArrayList<>();
         Game.buildEntryChecklist(entry, aiEntries);
@@ -436,16 +443,24 @@ public class GameScreen implements Screen {
                     strongestPlay = computerHand.getRandomCard();
                 }
             }
+            if (strongestPlay == null) return; //should never happen ideally.
         }
         TTButton aiButton = positionActorMap.get(positionToPlay);
         aiButton.setCard(strongestPlay);
-        Sprite sprite = sprites.get(strongestPlay.getName()+"CPU");
-        aiButton.getStyle().imageDown = new SpriteDrawable(sprite);
-        aiButton.getStyle().imageUp = new SpriteDrawable(sprite);
-        aiButton.setOwner(Players.COMPUTER);
-        computerHandTable.removeActor(computerHandTable.findActor(strongestPlay.getName()));
-        computerHand.getCards().remove(strongestPlay.getId());
-        captureOpponents(positionToPlay, strongestPlay, Players.COMPUTER);
+        Actor handButton = computerHandTable.findActor(strongestPlay.getName());
+        Card finalStrongestPlay = strongestPlay;
+        Position finalPositionToPlay = positionToPlay;
+        Action action = Actions.sequence(Actions.moveTo(aiButton.getX(), aiButton.getY(), 0.3f),
+                Actions.run(() -> {
+                    Sprite sprite = sprites.get(finalStrongestPlay.getName()+"CPU");
+                    aiButton.getStyle().imageDown = new SpriteDrawable(sprite);
+                    aiButton.getStyle().imageUp = new SpriteDrawable(sprite);
+                    aiButton.setOwner(Players.COMPUTER);
+                    computerHandTable.removeActor(computerHandTable.findActor(finalStrongestPlay.getName()));
+                    computerHand.getCards().remove(finalStrongestPlay.getId());
+                    captureOpponents(finalPositionToPlay, finalStrongestPlay, Players.COMPUTER);
+                }));
+        handButton.addAction(action);
     }
 
     private void buildNeighborMap() {
@@ -502,6 +517,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
