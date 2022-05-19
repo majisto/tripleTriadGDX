@@ -40,7 +40,6 @@ public class GameScreen implements Screen {
     private final Skin skin;
     private final Skin crispySkin;
     final HashMap<String, Sprite> sprites = new HashMap<>();
-    TextureAtlas originalAtlas;
     Card selectedCard;
     Button selectedButton;
     CheckBox selectedCheckbox;
@@ -58,10 +57,11 @@ public class GameScreen implements Screen {
     private VerticalGroup humanVerticalGroup;
     private Label endOfGameMessage;
     private TextButton newGameButton;
+    private CardSelection cardSelection;
 
     public GameScreen(TripleTriad game) {
 
-        originalAtlas = new TextureAtlas("ttOriginal.txt");
+        TextureAtlas originalAtlas = new TextureAtlas("ttOriginal.txt");
         Array<TextureAtlas.AtlasRegion> regions = originalAtlas.getRegions();
         Array.ArrayIterator<TextureAtlas.AtlasRegion> atlasRegions = new Array.ArrayIterator<>(regions);
 
@@ -88,12 +88,14 @@ public class GameScreen implements Screen {
         checkBoxes = new ArrayList<>();
         playerHand = new Hand();
         computerHand = new Hand();
+        cardSelection = CardSelection.builder().stage(stage).skin(skin).sprites(sprites).build();
 
         buildUIButtonsAndBoard();
         Gdx.input.setInputProcessor(stage);
     }
 
     private void buildUIButtonsAndBoard () {
+//        cardSelection.buildCardSelectionList();
         buildBoard();
         buildPlayerHandButtons();
         buildComputerHandImages();
@@ -218,29 +220,26 @@ public class GameScreen implements Screen {
                 if (player == Players.HUMAN) {
                     playerScore++;
                     computerScore--;
-                    updateScores();
-                    defenderButton.setOwner(Players.HUMAN);
-                    Sprite sprite = sprites.get(defenderButton.getCard().getName());
-                    SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
-                    defenderButton.getStyle().imageUp = new SpriteDrawable(spriteDrawable);
-                    defenderButton.getStyle().imageDown = new SpriteDrawable(spriteDrawable);
+                    updateDefenderButton(defenderButton, Players.HUMAN);
                 }
                 else if (player == Players.COMPUTER) {
                     playerScore--;
                     computerScore++;
-                    updateScores();
-                    defenderButton.setOwner(Players.COMPUTER);
-                    Sprite sprite = sprites.get(defenderButton.getCard().getName()+"CPU");
-                    SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
-                    defenderButton.getStyle().imageUp = spriteDrawable;
-                    defenderButton.getStyle().imageDown = spriteDrawable;
-                    defenderButton.getStyle().imageChecked = spriteDrawable;
-                    defenderButton.getStyle().imageCheckedDown = spriteDrawable;
-
+                    updateDefenderButton(defenderButton, Players.COMPUTER);
                 }
             }
         }
+        updateScores();
+    }
 
+    private void updateDefenderButton(TTButton defenderButton, Players player) {
+        Sprite sprite = sprites.get((player == Players.HUMAN ? defenderButton.getCard().getName() : (defenderButton.getCard().getName() + "CPU")));
+        defenderButton.setOwner(player == Players.HUMAN ? Players.HUMAN : Players.COMPUTER);
+        SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
+        defenderButton.getStyle().imageUp = spriteDrawable;
+        defenderButton.getStyle().imageDown = spriteDrawable;
+        defenderButton.getStyle().imageChecked = spriteDrawable;
+        defenderButton.getStyle().imageCheckedDown = spriteDrawable;
     }
 
     private void updateScores () {
@@ -517,7 +516,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Gdx.graphics.getDeltaTime());
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
