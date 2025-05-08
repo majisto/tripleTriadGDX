@@ -1,4 +1,4 @@
-package com.majisto.game;
+package com.majisto.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.majisto.game.TripleTriad;
 
 /**
  * tripleTriadGDX Created by Majisto on 5/4/2022.

@@ -1,6 +1,7 @@
-package com.majisto.game;
+package com.majisto.game.Screens;
 
 import com.badlogic.gdx.Screen;
+import com.majisto.game.TripleTriad;
 
 /**
  * tripleTriadGDX Created by Majisto on 5/4/2022.

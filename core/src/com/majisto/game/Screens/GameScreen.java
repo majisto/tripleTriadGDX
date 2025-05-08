@@ -1,4 +1,4 @@
-package com.majisto.game;
+package com.majisto.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -21,25 +21,29 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.majisto.game.CardSelection;
+import com.majisto.game.TTButton;
+import com.majisto.game.TripleTriad;
 import com.majisto.game.logic.*;
 
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * tripleTriadGDX Created by Majisto on 5/4/2022.
  */
 public class GameScreen implements Screen {
-    private final TripleTriad game;
+    public final TripleTriad game;
     private final Music boogie;
     private final Music victoryMusic;
     private final Stage stage;
 
-    private Hand playerHand = new Hand();
+    public Hand playerHand = new Hand();
     private Hand computerHand = new Hand();
     private final Skin skin;
     private final Skin crispySkin;
     final HashMap<String, Sprite> sprites = new HashMap<>();
+    final HashMap<String, HashMap<String, Sprite>> spriteMap;
     Card selectedCard;
     Button selectedButton;
     CheckBox selectedCheckbox;
@@ -61,6 +65,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(TripleTriad game) {
 
+        spriteMap = new HashMap<>();
         TextureAtlas originalAtlas = new TextureAtlas("ttOriginal.txt");
         Array<TextureAtlas.AtlasRegion> regions = originalAtlas.getRegions();
         Array.ArrayIterator<TextureAtlas.AtlasRegion> atlasRegions = new Array.ArrayIterator<>(regions);
@@ -343,6 +348,7 @@ public class GameScreen implements Screen {
             neighborMap.put(position, new ArrayList<>());
             positionActorMap.put(position, buttonImage);
             buttonImage.setPosition(position);
+//            Gdx.app.log("TEST", buttonImage.toString());
             buttonImage.addListener(new ClickListener(){
                 @Override
                 public void clicked (InputEvent event, float x, float y) {
@@ -395,12 +401,12 @@ public class GameScreen implements Screen {
             endOfGameMessage = new Label("YOU LOSE!", skin);
             endOfGameMessage.setColor(Color.RED);
             endOfGameMessage.setFontScale(10f);
-            endOfGameMessage.setPosition(0, stage.getHeight() * 0.5f);
+            endOfGameMessage.setPosition(endOfGameMessage.getWidth(), stage.getHeight() * 0.5f);
         } else if (cpuScore < humanScore) {
             endOfGameMessage = new Label("YOU WIN!", skin);
             endOfGameMessage.setColor(Color.BLUE);
             endOfGameMessage.setFontScale(10f);
-            endOfGameMessage.setPosition(0, stage.getHeight() * 0.5f);
+            endOfGameMessage.setPosition(stage.getWidth() * 0.25f, stage.getHeight() * 0.5f);
             boogie.stop();
             victoryMusic.play();
         } else {

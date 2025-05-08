@@ -15,6 +15,17 @@ public class TTButton extends ImageButton {
 
     public Card card;
     public Position position;
+
+    @Override
+    public String toString() {
+        return "TTButton{" +
+                "card=" + card +
+                ", position=" + position +
+                ", entry=" + entry +
+                ", owner=" + owner +
+                '}';
+    }
+
     public Entry entry;
     public Players getOwner() {
         return owner;

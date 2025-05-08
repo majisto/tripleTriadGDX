@@ -2,8 +2,13 @@ package com.majisto.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.majisto.game.Screens.CardSelectionScreen;
+import com.majisto.game.Screens.GameScreen;
+import com.majisto.game.Screens.LoadingScreen;
+import com.majisto.game.Screens.MainMenuScreen;
 import com.majisto.game.logic.Card;
 import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -13,13 +18,16 @@ public class TripleTriad extends Game {
 	private MainMenuScreen menuScreen;
 	private GameScreen mainScreen;
 	private PreferencesScreen preferencesScreen;
+	private CardSelectionScreen cardSelectionScreen;
+	@Getter
 	private AppPreferences preferences;
-	private LoadingScreen loadingScreen = new LoadingScreen(this);
+	private final LoadingScreen loadingScreen = new LoadingScreen(this);
 	public TTAssetManager assMan = new TTAssetManager();
 
 	public final static int MENU = 0;
 	public final static int PREFERENCES = 1;
 	public final static int APPLICATION = 2;
+	public static final int CARD_SELECTION = 3;
 
 	@Override
 	public void create () {
@@ -49,11 +57,11 @@ public class TripleTriad extends Game {
 				if(mainScreen == null) mainScreen = new GameScreen(this);
 				setScreen(mainScreen);
 				break;
+			case CARD_SELECTION:
+				if(cardSelectionScreen == null) cardSelectionScreen = new CardSelectionScreen(this);
+				setScreen(cardSelectionScreen);
+				break;
 		}
-	}
-
-	public AppPreferences getPreferences(){
-		return this.preferences;
 	}
 
 	@Override

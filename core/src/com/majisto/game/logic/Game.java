@@ -33,7 +33,7 @@ public class Game {
         // Using Scanner for Getting Input from User
         dealHands();
         Scanner in = new Scanner(System.in);
-        while (human.getCards().size() > 0) {
+        while (!human.getCards().isEmpty()) {
             System.out.print("Enter command: ");
             String a = in.nextLine();
             processInput(a);
@@ -193,6 +193,10 @@ public class Game {
     }
 
     public static void buildEntryChecklist(Entry entry, List<AiEntry> checkList) {
+        /**
+         * Determines which locations for the AI to check for placing a card, based on entry input which was
+         * where the player played their card.
+         */
         if (entry.position.row == 0) {
             if (entry.position.column == 0) {
                 checkList.add(new AiEntry(0, 1, RIGHT));
